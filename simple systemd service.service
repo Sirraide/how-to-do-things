@@ -1,0 +1,17 @@
+```
+[Unit]
+Description=Description of what this is
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+WorkingDirectory=/working/directory
+Type=simple
+Restart=always
+RestartSec=1
+User=user-account-to-run-service
+ExecStart=/path/to/executable arg1 arg2 arg3 ...
+
+[Install]
+WantedBy=multi-user.target
+```
