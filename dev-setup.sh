@@ -26,6 +26,11 @@ fi
 
 WORKING_DIRECTORY=$(pwd -P)
 
+echo -n -e "\033[33mPlease input the absolute path to your main shell config (e.g. \033[32m/home/username/.bashrc\033[33m) \033[0m"
+read -p "" SHELL_CONFIG_PATH
+
+[ -f "$SHELL_CONFIG_PATH" ] || die "File \033[33m$SHELL_CONFIG_PATH\033[31m does not exist or cannot be accessed."
+
 # Install clang
 
 info_same_line 'Press any key to install \033[32mclang\033[33m (^C to abort) '
@@ -103,13 +108,13 @@ if [ "$INSTALLED_CLANG" = 1 ]; then
 	cat >> $install_script <<-'EOF'
 
 		info 'Setting default c/c++ compiler to clang'
-		run "echo 'export CC=clang' >> ~/.bashrc"
-		run "echo 'export CXX=clang++' >> ~/.bashrc"
-		run "source ~/.bashrc"
+		run "echo 'export CC=clang' >> ~/$"
+		run "echo 'export CXX=clang++' >> $SHELL_CONFIG_PATH"
+		run "source $SHELL_CONFIG_PATH"
 	EOF
 fi
 
-cat >> $install_script <<-'EOF'
+cat >> $install_script <<-EOF
 
 	WORKING_DIRECTORY=$(pwd -P)
 
@@ -130,13 +135,13 @@ cat >> $install_script <<-'EOF'
 	run 'export NVM_DIR="$HOME/.nvm"'
 	run '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
 	run '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-	run 'source ~/.bashrc'
+	run "source $SHELL_CONFIG_PATH"
 	run 'nvm install node'
 	run 'nvm use node'
 	run 'nvm alias default node'
 
 	info 'Successfully installed nodejs'
-	info 'As a last step, please run \033[32msource ~/.bashrc'
+	info "As a last step, please run \033[32msource $SHELL_CONFIG_PATH"
 EOF
 
 if [[ -f "$install_script" ]]; then
