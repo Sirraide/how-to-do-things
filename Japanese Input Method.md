@@ -1,3 +1,6 @@
+# WARNING: THIS WILL COMPLETELY BREAK DEAD KEYS IN EMACS AND SEVERAL IDEs (INTELLIJ ETC)
+## PROCEED AT YOUR OWN PERIL
+
 #### Step 1: Install these packages:
 `pacman -S fcitx fcitx-mozc fcitx-qt5 kcm-fcitx fcitx-gtk2 fcitx-gtk3`
 
