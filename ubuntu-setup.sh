@@ -114,8 +114,7 @@ if [ "$INSTALLED_CLANG" = 1 ]; then
 	EOF
 fi
 
-cat >> $install_script <<-EOF
-
+cat >> $install_script <<-'EOF'
 	WORKING_DIRECTORY=$(pwd -P)
 
 	info_same_line 'Press any key to install or update \033[32mnodejs\033[33m (^C to abort) '
@@ -135,14 +134,24 @@ cat >> $install_script <<-EOF
 	run 'export NVM_DIR="$HOME/.nvm"'
 	run '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
 	run '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
+EOF
+
+cat >> $install_script <<-EOF
 	run "source $SHELL_CONFIG_PATH"
+EOF
+
+cat >> $install_script <<-'EOF'
 	run 'nvm install node'
 	run 'nvm use node'
 	run 'nvm alias default node'
 
 	info 'Successfully installed nodejs'
+EOF
+
+cat >> $install_script <<-EOF
 	info "As a last step, please run \033[32msource $SHELL_CONFIG_PATH"
 EOF
+
 
 if [[ -f "$install_script" ]]; then
 	chmod +rwx "$install_script"
