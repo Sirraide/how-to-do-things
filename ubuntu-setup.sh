@@ -24,19 +24,18 @@ if [[ $EUID -ne 0 ]]; then
 	die 'Error: this script must be run as root'
 fi
 
-WORKING_DIRECTORY=$(pwd -P)
+working_directory=$(pwd -P)
 
 echo -n -e "\033[33mPlease input the absolute path to your main shell config (e.g. \033[32m/home/username/.bashrc\033[33m) \033[0m"
-read -p "" SHELL_CONFIG_PATH
+read -p "" shell_config_path
 
-[ -f "$SHELL_CONFIG_PATH" ] || die "File \033[33m$SHELL_CONFIG_PATH\033[31m does not exist or cannot be accessed."
+[ -f "$shell_config_path" ] || die "File \033[33m$shell_config_path\033[31m does not exist or cannot be accessed."
 
 # Install clang
-
 info_same_line 'Press any key to install \033[32mclang\033[33m (^C to abort) '
 read -r -n 1 ignored
 
-INSTALLED_CLANG=0
+installed_clang=0
 
 if [[ -e '/bin/clang' ]]; then
 	info "A version of clang is already installed."
@@ -49,11 +48,10 @@ else
 	run 'bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"'
 	run 'ln -s /bin/clang-13 /bin/clang'
 	run 'ln -s /bin/clang /bin/clang++'
-	INSTALLED_CLANG=1
+	installed_clang=1
 fi
 
 # Install cmake
-
 info_same_line 'Press any key to install \033[32mcmake\033[33m (^C to abort) '
 read -r -n 1 ignored
 
@@ -76,8 +74,38 @@ else
 	run "ln -s /opt/cmake/bin/cmake /bin/cmake"
 fi
 
+# Install ninja
+info_same_line 'Press any key to install \033[32mninja\033[33m (^C to abort) '
+read -r -n 1 ignored
+if [[ -e '/bin/ninja' ]]; then
+	info "A version of ninja is already installed."
+	info "Uninstall it and run this script again to update it."
+	info "Installing ninja - Skipped"
+else
+	info 'Installing ninja...'
+	run "apt-install ninja-build"
+fi
+
+# Install nasm
+info_same_line 'Press any key to install \033[32mnasm\033[33m (^C to abort) '
+read -r -n 1 ignored
+if [[ -e '/bin/nasm' ]]; then
+	info "A version of nasm is already installed."
+	info "Uninstall it and run this script again to update it."
+	info "Installing nasm - Skipped"
+else
+	info 'Installing nasm...'
+	run "apt-install nasm"
+fi
+
+# Install nasm
+info_same_line 'Press any key to install \033[32mbuild-essential\033[33m (^C to abort) '
+read -r -n 1 ignored
+info 'Installing build-essential...'
+run "apt-install build-essential"
+
 # Generate install script
-cd "$WORKING_DIRECTORY"
+cd "$working_directory"
 install_script='install.sh'
 cat > $install_script <<-'EOF'
 	#!/usr/bin/env bash
@@ -104,18 +132,19 @@ cat > $install_script <<-'EOF'
 	fi
 EOF
 
-if [ "$INSTALLED_CLANG" = 1 ]; then
-	cat >> $install_script <<-'EOF'
+if [ "$installed_clang" = 1 ]; then
+	cat >> $install_script <<-EOF
 
 		info 'Setting default c/c++ compiler to clang'
-		run "echo 'export CC=clang' >> ~/$"
-		run "echo 'export CXX=clang++' >> $SHELL_CONFIG_PATH"
-		run "source $SHELL_CONFIG_PATH"
+		run "echo 'export CC=clang' >> ~/$shell_config_path"
+		run "echo 'export CXX=clang++' >> $shell_config_path"
+		run "source $shell_config_path"
 	EOF
 fi
 
 cat >> $install_script <<-'EOF'
-	WORKING_DIRECTORY=$(pwd -P)
+
+	working_directory=$(pwd -P)
 
 	info_same_line 'Press any key to install or update \033[32mnodejs\033[33m (^C to abort) '
 	read -r -n 1 ignored
@@ -137,7 +166,7 @@ cat >> $install_script <<-'EOF'
 EOF
 
 cat >> $install_script <<-EOF
-	run "source $SHELL_CONFIG_PATH"
+	run "source $shell_config_path"
 EOF
 
 cat >> $install_script <<-'EOF'
@@ -146,10 +175,11 @@ cat >> $install_script <<-'EOF'
 	run 'nvm alias default node'
 
 	info 'Successfully installed nodejs'
+	info 'As a last step, please run \033[32msource ~/.bashrc'
 EOF
 
 cat >> $install_script <<-EOF
-	info "As a last step, please run \033[32msource $SHELL_CONFIG_PATH"
+	info "As a last step, please run \033[32msource $shell_config_path"
 EOF
 
 
