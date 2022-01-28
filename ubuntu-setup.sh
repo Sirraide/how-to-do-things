@@ -98,7 +98,7 @@ else
 	run "apt-install nasm"
 fi
 
-# Install nasm
+# Install build-essential
 info_same_line 'Press any key to install \033[32mbuild-essential\033[33m (^C to abort) '
 read -r -n 1 ignored
 info 'Installing build-essential...'
