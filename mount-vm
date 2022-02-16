@@ -1,0 +1,1 @@
+sudo mount -t 9p -o trans=virtio /mnt /vm/share
