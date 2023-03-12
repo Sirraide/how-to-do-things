@@ -15,8 +15,10 @@
 //    
 // ==========================================================================
 
+/// For `std::swap()`.
 #include <utility>
 
+/// Partition a range. See `quick_sort()` below.
 template <typename It>
 It partition(It begin, It end) {
     /// Enable ADL. This really has nothing to
@@ -49,9 +51,9 @@ It partition(It begin, It end) {
 
     /// Return the position of the pivot.
     return begin;
-
 }
 
+/// Sort a range.
 template <typename It>
 void quick_sort(It begin, It end) {
     /// Nothing to sort.
