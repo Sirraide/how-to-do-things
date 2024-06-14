@@ -1,0 +1,51 @@
+%% Sometimes, you may want to parse a box definition and insert
+%% content after it; you can already do that with assignments and
+%% groups using \afterassignment and \aftergroup, respectively, and
+%% we can combine them to accomplish what we want (example and
+%% explanation are below):
+\newbox\mybox
+
+\def\aftervbox{%
+  \afterassignment\aftervbox@aux
+  \setbox\mybox\vbox
+}
+
+\def\aftervbox@aux{%
+  \aftergroup\aftervbox@aux@ii
+}
+
+\def\aftervbox@aux@ii{%
+  %% Do whatever you want in here with \mybox. In this case, we
+  %% just insert its contents twice.
+  \copy\mybox
+  \box\mybox
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Example %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\aftervbox{foobar}
+
+%% The reason why this works is that the above expands to
+\afterassignment\aftervbox@aux\setbox\mybox\vbox{foobar}
+
+%% \afterassignment, when combined with a box assignment, will
+%% insert the token passed to it after the opening brace of the
+%% box. Thus, we end up with
+\setbox\mybox\vbox{\aftervbox@aux foobar}
+
+%% This, in turn, conceptually expands to
+\setbox\mybox\vbox{\aftergroup\aftervbox@aux@ii foobar}
+
+%% Next, \aftergroup ends up placing its argument (the token
+%% we passed to it in the definition of \aftervbox@aux, that 
+%% is, \aftervbox@aux@ii) after the closing brace of the 
+%% current group, which in this case is the box definition!
+\setbox\mybox\vbox{foobar}\aftervbox@aux@ii
+
+%% Finally, this conceptually expands to.
+\setbox\mybox\vbox{foobar}\copy\mybox\box\mybox
+
+%% Which is exactly what we wanted to do: process a box, put it
+%% in \mybox, then do something with it. In this case, we end up
+%% inserting it twice, so the final result is
+foobar
+foobar
