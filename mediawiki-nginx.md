@@ -337,9 +337,10 @@ After that, click on the link that says ‘enter your wiki.’ This completes th
 now move on to post-install configuration.
 
 # Post-‘Install’ Configuration
-Clicking the aforementioned link should redirect you to http://localhost/w/index.php?title=Main_Page. The login
-button (at least if you’re using the default theme) is in the top-right corner of the screen, log in as you would
-on any other wiki and create users etc.
+Clicking the aforementioned link should redirect you to http://localhost/w/index.php?title=Main_Page (we’ll
+fix the ugly links later after moving the wiki to the server, don’t worry). The login button (at least if 
+you’re using the default theme) is in the top-right corner of the screen, log in as you would on any other 
+wiki and create users etc.
 
 (I’m candidly too lazy to write documentation for this part because it’s mostly self-evident; just go to the
 `Special Pages` page and browse a bit; pages of interest may be `All pages`, `Create account`, `User rights`,
@@ -436,6 +437,16 @@ valid PHP! (Note however that the closing PHP tag at the end of the file is usua
 
 - Change the `$wgServer` variable to point to `https://foowiki.example.com` (or `http://` if
   you don’t want to use HTTPS).
+
+- You probably want to enable short links (e.g. `/wiki/foobar` instead of the more ugly
+  `/w/index.php?title=foobar`); our nginx configuration is already set up to do that, but
+  we still need to enable them here. To do that, add the following anywhere (I like to put
+  it below the `$wgScriptPath`:
+  ```php
+  ## Enable short urls.
+  $wgArticlePath = "/wiki/$1";
+  $wgUsePathInfo = true;
+  ```
 
 - You probably want a custom logo for your wiki. Put two files in `w/resources/assets/`,
   a 100×100 and a 135×135 one, and then change the keys in the `$wgLogos` map to point to
