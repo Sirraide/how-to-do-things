@@ -1,0 +1,89 @@
+\ExplSyntaxOn
+
+%% Input is in \g_tmpa_str
+%% Output is in \g_tmpa_bool
+\cs_new:Npn \__test_if_string_contains_zero: {
+    \str_if_in:NnTF \g_tmpa_str 0 {
+        \bool_gset_true:N \g_tmpa_bool
+    } {
+        \bool_gset_false:N \g_tmpa_bool
+    }
+}
+
+%% Convert base 10 to bijective base 6.
+\NewDocumentCommand \ConvertNumber { m } {
+    \str_gclear:N \g_tmpa_str
+    \int_gset:Nn \g_tmpa_int {#1}
+
+    %% Split the number into base 6 digits.
+    \bool_until_do:nn {
+        \int_compare_p:nNn \g_tmpa_int = 0
+    } {
+        \str_gput_left:Nx \g_tmpa_str { \int_mod:nn \g_tmpa_int 6 }
+        \int_gset:Nn \g_tmpa_int { \int_div_truncate:nn \g_tmpa_int 6 }
+    }
+
+    %% Convert from base 6 to bijective base 6
+    %%
+    %% For some ungodly reason, the morons who came up with the LaTeX3
+    %% spec didn’t saw a _p version of \str_if_in fit for inclusion into
+    %% the language, so we need to do this *the dumb way*.
+    \__test_if_string_contains_zero:
+    \bool_while_do:nn {
+        \g_tmpa_bool
+    } {
+        \str_compare:nNnTF { \str_head:N \g_tmpa_str } = 0 {
+            \str_gset:Nn \g_tmpa_str { \str_tail:N \g_tmpa_str }
+        } {
+            \int_gset:Nn \g_tmpb_int 1
+            \bool_while_do:nn {
+                \int_compare_p:n { \g_tmpb_int <= \str_count:N \g_tmpa_str }
+            } {
+                \int_compare:nNnTF {\str_item:Nn \g_tmpa_str \g_tmpb_int} = {0} {
+                    %% For some ungodly reason, setting a character at an index
+                    %% is too advanced for this damnable 1970s programming language,
+                    %% so we *also* need to *this* *the dumb way*.
+                    \str_gclear:N \g_tmpb_str
+
+                    %% Append the part of the string before the digit we need to decrement.
+                    \str_gput_right:Nx \g_tmpb_str {
+                        \str_range:Nnn \g_tmpa_str 1 {\int_eval:n {\g_tmpb_int - 2}}
+                    }
+
+                    %% Append the decremented digit.
+                    \str_gput_right:Nx \g_tmpb_str {
+                        \int_eval:n {
+                            \str_item:Nn \g_tmpa_str {\int_eval:n {\g_tmpb_int - 1}}
+                            -
+                            1
+                        }
+                    }
+
+                    %% Append a literal 6.
+                    \str_gput_right:Nx \g_tmpb_str {6}
+
+                    %% Append the rest of the string.
+                    \str_gput_right:Nx \g_tmpb_str {
+                        \str_range:Nnn \g_tmpa_str {\int_eval:n {\g_tmpb_int + 1}} {10000}
+                    }
+
+                    %% Overwrite the original string.
+                    \str_gset_eq:NN \g_tmpa_str \g_tmpb_str
+
+                    %% And break out of the inner loop.
+                    \int_gset:Nn \g_tmpb_int {10000}
+                } {
+                    %% Do nothing here.
+                }
+                \int_gincr:N \g_tmpb_int
+            }
+        }
+
+        \__test_if_string_contains_zero:
+    }
+
+    \tl_reverse:N \g_tmpa_str
+    \str_use:N \g_tmpa_str
+}
+
+\ExplSyntaxOff
