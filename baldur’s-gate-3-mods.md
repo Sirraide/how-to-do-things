@@ -1,4 +1,12 @@
-## How to manually install mods for Baldur’s Gate 3 on Linux
+# How to manually install mods for Baldur’s Gate 3 on Linux
+
+## Installing the script extender
+1. Download the script extender.
+2. Go to `"~/.local/share/Steam/steamapps/common/Baldurs Gate 3/bin"`
+3. Copy the `DWrite.dll` that is the script extender into this directory.
+4. In steam, modify the command line for Baldur’s Gate 3 to be `WINEDLLOVERRIDES="DWrite.dll=n,b" PROTON_NO_ESYNC=1 %command%`.
+
+## Installing a mod
 1. Go to `"~/.local/share/Steam/steamapps/compatdata/1086940/pfx/drive_c/users/steamuser/AppData/Local/Larian Studios/Baldur's Gate 3"`
 2. Create a `Mods` directory if it doesn’t already exist.
 3. Download the mod you want to install. It should be a `.zip` file containing a `.pak` file and a JSON file. (Some mod authors are also nice enough to provide you w/ the XML tag that you need to copy-paste below)
