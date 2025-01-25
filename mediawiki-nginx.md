@@ -354,6 +354,16 @@ Stop Nginx and php-fpm to make sure nothing weird happens. Next, we need to move
 
 Each of these may have to be adjusted slightly, so lets go over them in turn.
 
+## Dependencies
+On Debian, installm all of this and disable apache afterwards:
+```bash
+$ sudo apt install php-fpm php-pgsql php-intl php-gd php-xml php-mbstring \
+  php-apcu imagemagick inkscape php-cli php-curl php-bcmath \
+  apache2 mariadb-server php php-mysql libapache2-mod-php
+
+$ sudo systemctl disable --now apache2
+```
+
 ## Moving the wiki
 This one is fairly simple: just `tar` the entire directory and copy it to the server; unpack it there. I like
 putting all of my server-related stuff in `/srv/`, so I’ll be putting it in `/srv/foowiki` (once again, that
