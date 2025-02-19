@@ -244,6 +244,15 @@ $ sudo restorecon -v '/foowiki' -R
 If this doesn’t work for you, then my bad. I have no idea what this does in the first
 place, but it makes SE linux shut up.
 
+## PHP setup
+Check the files under `/var/lib/php` and make sure they are owned by the same user that
+owns the php-fpm WORKER processes (the master process is likely owned by root). On Fedora,
+this should be the `nginx` user.
+
+```bash
+$ sudo chown -R nginx:nginx /var/lib/php/
+```
+
 # ‘Installing’ the Wiki
 The next section of the official tutorial is this: https://www.mediawiki.org/wiki/Manual:Config_script
 
