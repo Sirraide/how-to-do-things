@@ -1,0 +1,1 @@
+The `namei` command on linux checks the permissions for each segment in a path and prints which one it failed to access.
