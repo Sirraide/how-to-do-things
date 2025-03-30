@@ -446,8 +446,12 @@ And that’s pretty much it. You might have to make some more changes depending 
 server configuration, e.g. set up HHTPS, add a redirect from port 80 to 443, etc. but you
 can figure out that part yourself. This is not an Nginx tutorial, after all.
 
+## Final Server Configuration Steps
+Make sure that `nginx` and `php-fpm` are running under the same user; otherwise, you
+might experience problems while trying to perform file uploads. You can do this by
+running `ps aux` and `grep`ing for `php` and `nginx`.
 
-## Final Configuration Steps
+## Final Wiki Configuration Steps
 Open `LocalSettings.php` on the server. BE CAREFUL WHEN YOU EDIT THIS FILE and make sure
 you use something like `sudo -e` or change the permissions back to where the Nginx user
 can view this file. Furthermore, any typos in here will take down your entire site! Make
