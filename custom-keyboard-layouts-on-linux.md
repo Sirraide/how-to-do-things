@@ -1,4 +1,24 @@
 # How to create a custom keyboard layout on linux
+On Wayland, there is a simpler way to do this: create the directory `~/.config/xkb`, and put your custom layout in `~/.config/xkb/symbols/foo` where `foo` 
+is the name of the layout; then, create `~/.config/xkb/rules/evdev.xml` with the following contents:~
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>foo</name>
+        <shortDescription>fo</shortDescription>
+        <description>Custom Layout</description>
+      </configItem>
+    </layout>
+  </layoutList>
+</xkbConfigRegistry>
+```
+Note that the value of the `<name />` tag must be the name of the file you added to the `symbols` directory.
+
+## Legacy Tutorial
 The following are the steps that were required when I recently added my improved Greek keyboard layout ‘`aegreek`’.
 
 1. Actually create the keyboard layout; for the format, see e.g. `/usr/share/X11/xkb/symbols/us`. Alternatively, you can use [xkbgen](https://github.com/Sirraide/xkbdisplay) to generate the layout.
