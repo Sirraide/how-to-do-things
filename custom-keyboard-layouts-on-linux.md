@@ -1,4 +1,6 @@
 # How to create a custom keyboard layout on linux
+Adapted from https://xkbcommon.org/doc/current/user-configuration.html
+
 On Wayland, there is a simpler way to do this: create the directory `~/.config/xkb`, and put your custom layout in `~/.config/xkb/symbols/foo` where `foo` 
 is the name of the layout; then, create `~/.config/xkb/rules/evdev.xml` with the following contents:
 ```xml
