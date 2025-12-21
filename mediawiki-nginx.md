@@ -368,7 +368,7 @@ On Debian, installm all of this and disable apache afterwards:
 ```bash
 $ sudo apt install php-fpm php-pgsql php-intl php-gd php-xml php-mbstring \
   php-apcu imagemagick inkscape php-cli php-curl php-bcmath \
-  apache2 mariadb-server php php-mysql libapache2-mod-php
+  apache2 mariadb-server php php-mysql libapache2-mod-php mariadb-client-compat
 
 $ sudo systemctl disable --now apache2
 ```
