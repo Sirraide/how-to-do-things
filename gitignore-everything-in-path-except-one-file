@@ -1,0 +1,6 @@
+# Ignore everything in 'a' but keep 'a/b/c.txt'
+# Order matters!
+a/*
+!a/b
+a/b/*
+!a/b/c.txt
